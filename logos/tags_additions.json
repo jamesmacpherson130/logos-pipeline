@@ -1,1 +1,127 @@
-{}
+{
+  "health_recovery_anomalous": [
+    "spontaneous remission",
+    "unexpected recovery"
+  ],
+  "value_shift_altruism": [
+    "became more (compassionate|altruistic)",
+    "priorities (changed|shifted)"
+  ],
+  "illness_critical": [
+    "cancer (treatment|therapy)",
+    "severe infection",
+    "terminal illness"
+  ],
+  "peace_calm": [
+    "\\b(overwhelming|intense)\\s+peace\\b",
+    "\\b(profound|deep)\\s+(peace|calm)\\b"
+  ],
+  "obe_autoscopy": [
+    "\\bautoscopy\\b",
+    "out of (my|the) body",
+    "saw (my|the) body below"
+  ],
+  "fear_then_relief": [
+    "\\bfear\\b.*(dissolved|vanished|replaced by)"
+  ],
+  "music_harmony": [
+    "\\b(unearthly|heavenly)\\s+music\\b",
+    "harmonies (beyond|indescribable)"
+  ],
+  "respiratory_failure": [
+    "respiratory failure",
+    "stopped breathing"
+  ],
+  "reduced_fear_of_death": [
+    "fear of death (vanished|reduced)",
+    "no longer afraid of death"
+  ],
+  "void_darkness_peaceful": [
+    "\\bvoid\\b",
+    "peaceful darkness"
+  ],
+  "third_party_corroboration": [
+    "witness(es)? later confirmed"
+  ],
+  "boundary_barrier": [
+    "\\b(barrier|border|point of no return)\\b"
+  ],
+  "anesthesia": [
+    "during surgery",
+    "operating table",
+    "under anesthesia"
+  ],
+  "future_glimpse": [
+    "\\b(future|prophetic)\\s+(glimpse|vision)\\b"
+  ],
+  "brilliant_light": [
+    "\\b(brilliant|radiant|blinding)\\s+light\\b"
+  ],
+  "being_of_light": [
+    "being of light",
+    "presence of light"
+  ],
+  "remote_observation": [
+    "observed events in another room",
+    "saw objects later verified"
+  ],
+  "cardiac_arrest": [
+    "\\bflat(line|lined)\\b",
+    "\\bheart\\s+(stopped|stops|had stopped)\\b",
+    "cardiac arrest"
+  ],
+  "life_review_emotional": [
+    "\\blife review\\b",
+    "my whole life (flashed|played) before"
+  ],
+  "coma": [
+    "\\bcoma\\b",
+    "unconscious( for|)\\s+\\d+\\s+(days|weeks)"
+  ],
+  "hyperreal_colors": [
+    "(colors|colour)s?\\s+(more|beyond)\\s+vivid"
+  ],
+  "near_drowning": [
+    "\\b(drowned|nearly drowned)\\b",
+    "submerged in water"
+  ],
+  "purpose_meaning": [
+    "\\b(new|renewed)\\s+sense of purpose\\b"
+  ],
+  "guides_ancestors": [
+    "\\b(guide|guardian|angel|ancestor)s?\\b"
+  ],
+  "love_unconditional": [
+    "love beyond words",
+    "unconditional love"
+  ],
+  "heavenly_realm": [
+    "celestial (city|landscape)",
+    "heavenly (realm|place)"
+  ],
+  "tunnel_light": [
+    "moving through a tunnel",
+    "tunnel of light"
+  ],
+  "psi_sensitivity_reports": [
+    "heightened sensitivity",
+    "increased intuition"
+  ],
+  "veridical_perception": [
+    "\\bveridical\\b",
+    "accurate details later confirmed"
+  ],
+  "childbirth": [
+    "during childbirth",
+    "labor complications"
+  ],
+  "trauma_injury": [
+    "\\baccident\\b",
+    "massive blood loss",
+    "severe injury"
+  ],
+  "seizure": [
+    "\\b(epileptic|convulsion)\\b",
+    "\\bseizure\\b"
+  ]
+}

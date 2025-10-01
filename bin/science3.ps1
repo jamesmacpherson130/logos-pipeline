@@ -216,7 +216,7 @@ function Update-Tags {
     $existing = @()
     if ($tags.PSObject.Properties.Match($k).Count -gt 0) { $existing = @($tags.$k) | ForEach-Object { [string]$_ } }
     else { Add-Member -InputObject $tags -NotePropertyName $k -NotePropertyValue @() }
-    $set = [System.Collections.Generic.HashSet[string]]::new([string[]]([string[]]$existing))
+    $set = [System.Collections.Generic.HashSet[string]]::new([string[]]([string[]]([string[]]$existing)))
     foreach ($p in $Add[$k]) { if ($p -and -not $set -contains ($p)) { $null = $set.Add($p) } }
     $tags.$k = [string[]]$set
   }
@@ -234,9 +234,19 @@ function Logos-RunAll {
   $addPath = Join-Path $Base "logos\tags_additions.json"
   if (Test-Path $addPath) {
     try {
+            # Read additions as array-of-objects and reshape to { tag -> [patterns] }
       $addObj = Get-Content $addPath -Raw | ConvertFrom-Json
       $add = @{}
-      foreach ($p in $addObj.PSObject.Properties) { $add[$p.Name] = @($p.Value) }
+      foreach ($e in ($addObj | Where-Object { $_ -and $_.tag })) {
+        $tag = [string]$e.tag
+        if (-not $tag) { continue }
+        $pat = @()
+        if ($e.PSObject.Properties.Name -contains 'patterns' -and $e.patterns) {
+          foreach ($p in $e.patterns) { if ($null -ne $p) { $pat += [string]$p } }
+        }
+        $pat = $pat | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique | Sort-Object
+        $add[$tag] = [string[]]$pat
+      }
       if ($add.Count -gt 0) { Update-Tags -Base $Base -Add $add }
     } catch {
       Write-Warning "tags_additions.json parse error: $($_.Exception.Message)"
@@ -477,6 +487,8 @@ function Compute-TagDiff {
   }
   $newOnes | Sort-Object count -Descending
 }
+
+
 
 
 
