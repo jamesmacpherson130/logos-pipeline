@@ -1,0 +1,47 @@
+﻿# Psychological domain tags for Logos pipeline
+# Safe: works on Plus & Pro equally
+- tag: "anxiety"
+  patterns:
+    - "\banxiety\b"
+    - "panic attack"
+    - "severe worry"
+- tag: "depression"
+  patterns:
+    - "\bdepression\b"
+    - "felt hopeless"
+    - "wanted to die"
+- tag: "dissociation"
+  patterns:
+    - "out of body"
+    - "felt detached"
+    - "unreal.*experience"
+- tag: "ptsd"
+  patterns:
+    - "flashback"
+    - "trauma"
+    - "nightmares.*trauma"
+- tag: "fear_of_death"
+  patterns:
+    - "terrified.*die"
+    - "fear of dying"
+    - "death anxiety"
+- tag: "peace_after_experience"
+  patterns:
+    - "felt peace"
+    - "no fear of death"
+    - "calm acceptance"
+- tag: "suicidal_context"
+  patterns:
+    - "suicide attempt"
+    - "tried to kill myself"
+    - "self harm"
+- tag: "grief_loss"
+  patterns:
+    - "lost my (mother|father|child|friend)"
+    - "overwhelming grief"
+    - "mourning"
+- tag: "psychosis_like"
+  patterns:
+    - "hallucination"
+    - "voices.*head"
+    - "delusion"
