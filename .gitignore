@@ -1,0 +1,16 @@
+# OS/Editor bits
+.DS_Store
+Thumbs.db
+# Local outputs
+science_index.csv
+jsonl/
+logos/knowledge.json
+logos/doctrine.md
+logos/reports/
+logos/history/
+insights/insights.jsonl
+# Raw/parsed artifacts
+raw/
+parsed/
+# Exports
+exports/
