@@ -1,0 +1,15 @@
+﻿# Veridical / information content
+- tag: "veridical_perception"
+  patterns:
+    - "\bveridical\b"
+    - "accurate details later confirmed"
+- tag: "remote_observation"
+  patterns:
+    - "observed events in another room"
+    - "saw objects later verified"
+- tag: "future_glimpse"
+  patterns:
+    - "\b(future|prophetic)\s+(glimpse|vision)\b"
+- tag: "third_party_corroboration"
+  patterns:
+    - "witness(es)? later confirmed"

@@ -1,0 +1,19 @@
+﻿# Spiritual / beings / locales
+- tag: "being_of_light"
+  patterns:
+    - "being of light"
+    - "presence of light"
+- tag: "guides_ancestors"
+  patterns:
+    - "\b(guide|guardian|angel|ancestor)s?\b"
+- tag: "heavenly_realm"
+  patterns:
+    - "heavenly (realm|place)"
+    - "celestial (city|landscape)"
+- tag: "void_darkness_peaceful"
+  patterns:
+    - "\bvoid\b"
+    - "peaceful darkness"
+- tag: "boundary_barrier"
+  patterns:
+    - "\b(barrier|border|point of no return)\b"

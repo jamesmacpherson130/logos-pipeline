@@ -1,0 +1,17 @@
+﻿# Aftereffects / integration
+- tag: "reduced_fear_of_death"
+  patterns:
+    - "no longer afraid of death"
+    - "fear of death (vanished|reduced)"
+- tag: "value_shift_altruism"
+  patterns:
+    - "became more (compassionate|altruistic)"
+    - "priorities (changed|shifted)"
+- tag: "psi_sensitivity_reports"
+  patterns:
+    - "increased intuition"
+    - "heightened sensitivity"
+- tag: "health_recovery_anomalous"
+  patterns:
+    - "unexpected recovery"
+    - "spontaneous remission"

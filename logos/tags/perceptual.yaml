@@ -1,0 +1,20 @@
+﻿# Perceptual phenomena (OBE, tunnel, light, sound)
+- tag: "obe_autoscopy"
+  patterns:
+    - "out of (my|the) body"
+    - "\bautoscopy\b"
+    - "saw (my|the) body below"
+- tag: "tunnel_light"
+  patterns:
+    - "tunnel of light"
+    - "moving through a tunnel"
+- tag: "brilliant_light"
+  patterns:
+    - "\b(brilliant|radiant|blinding)\s+light\b"
+- tag: "hyperreal_colors"
+  patterns:
+    - "(colors|colour)s?\s+(more|beyond)\s+vivid"
+- tag: "music_harmony"
+  patterns:
+    - "\b(unearthly|heavenly)\s+music\b"
+    - "harmonies (beyond|indescribable)"

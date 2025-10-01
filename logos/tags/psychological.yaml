@@ -1,47 +1,19 @@
-﻿# Psychological domain tags for Logos pipeline
-# Safe: works on Plus & Pro equally
-- tag: "anxiety"
+﻿# Psychological / emotional motifs
+- tag: "peace_calm"
   patterns:
-    - "\banxiety\b"
-    - "panic attack"
-    - "severe worry"
-- tag: "depression"
+    - "\b(profound|deep)\s+(peace|calm)\b"
+    - "\b(overwhelming|intense)\s+peace\b"
+- tag: "love_unconditional"
   patterns:
-    - "\bdepression\b"
-    - "felt hopeless"
-    - "wanted to die"
-- tag: "dissociation"
+    - "unconditional love"
+    - "love beyond words"
+- tag: "life_review_emotional"
   patterns:
-    - "out of body"
-    - "felt detached"
-    - "unreal.*experience"
-- tag: "ptsd"
+    - "\blife review\b"
+    - "my whole life (flashed|played) before"
+- tag: "fear_then_relief"
   patterns:
-    - "flashback"
-    - "trauma"
-    - "nightmares.*trauma"
-- tag: "fear_of_death"
+    - "\bfear\b.*(dissolved|vanished|replaced by)"
+- tag: "purpose_meaning"
   patterns:
-    - "terrified.*die"
-    - "fear of dying"
-    - "death anxiety"
-- tag: "peace_after_experience"
-  patterns:
-    - "felt peace"
-    - "no fear of death"
-    - "calm acceptance"
-- tag: "suicidal_context"
-  patterns:
-    - "suicide attempt"
-    - "tried to kill myself"
-    - "self harm"
-- tag: "grief_loss"
-  patterns:
-    - "lost my (mother|father|child|friend)"
-    - "overwhelming grief"
-    - "mourning"
-- tag: "psychosis_like"
-  patterns:
-    - "hallucination"
-    - "voices.*head"
-    - "delusion"
+    - "\b(new|renewed)\s+sense of purpose\b"
