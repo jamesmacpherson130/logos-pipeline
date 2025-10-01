@@ -226,7 +226,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -306,7 +306,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -813,7 +813,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -893,7 +893,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -1172,14 +1172,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -1630,7 +1630,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -1710,7 +1710,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -1989,14 +1989,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -2447,7 +2447,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -2527,7 +2527,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -2806,14 +2806,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -3262,7 +3262,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -3342,7 +3342,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -3621,14 +3621,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -4078,7 +4078,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -4158,7 +4158,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -4437,14 +4437,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -4897,7 +4897,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -4977,7 +4977,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -5256,14 +5256,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -5714,7 +5714,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -5794,7 +5794,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -6073,14 +6073,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -6529,7 +6529,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -6609,7 +6609,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -6888,14 +6888,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -7345,7 +7345,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -7425,7 +7425,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -7704,14 +7704,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -7937,14 +7937,14 @@ $insMd
   }
   $rows | Select-Object pmcid, title, journal, url, tags
 }
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -8295,7 +8295,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -8375,7 +8375,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -8654,14 +8654,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -9112,7 +9112,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -9192,7 +9192,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -9471,14 +9471,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -9929,7 +9929,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -10009,7 +10009,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -10288,14 +10288,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -10744,7 +10744,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -10824,7 +10824,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -11103,14 +11103,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -11560,7 +11560,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -11640,7 +11640,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -11919,14 +11919,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -12379,7 +12379,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -12459,7 +12459,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -12738,14 +12738,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -13196,7 +13196,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -13276,7 +13276,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -13555,14 +13555,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -14011,7 +14011,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -14091,7 +14091,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -14370,14 +14370,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -14827,7 +14827,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -14907,7 +14907,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -15186,14 +15186,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -15727,7 +15727,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -15807,7 +15807,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -16086,14 +16086,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -16544,7 +16544,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -16624,7 +16624,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -16903,14 +16903,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -17361,7 +17361,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -17441,7 +17441,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -17720,14 +17720,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -18176,7 +18176,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -18256,7 +18256,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -18535,14 +18535,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -18992,7 +18992,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -19072,7 +19072,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -19351,14 +19351,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -19811,7 +19811,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -19891,7 +19891,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -20170,14 +20170,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -20628,7 +20628,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -20708,7 +20708,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -20987,14 +20987,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -21443,7 +21443,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -21523,7 +21523,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -21802,14 +21802,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -22259,7 +22259,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -22339,7 +22339,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -22618,14 +22618,14 @@ if ($MyInvocation.MyCommand.Module) {
 
 
 
-  $anySet = [System.Collections.Generic.HashSet[string]]::new(($Any | ForEach-Object { $_.ToLower() }))
-  $allSet = [System.Collections.Generic.HashSet[string]]::new(($All | ForEach-Object { $_.ToLower() }))
+  $anySet = [System.Collections.Generic.HashSet[string]]::new([string[]](($Any | ForEach-Object { $_.ToLower()) }))
+  $allSet = [System.Collections.Generic.HashSet[string]]::new([string[]](($All | ForEach-Object { $_.ToLower()) }))
   Get-Content $in | ForEach-Object {
     if (-not $_) { return }
     $rec = $_ | ConvertFrom-Json
     $tags = @()
     if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) { $tags = @($rec.tags) | ForEach-Object { $_.ToString().ToLower() } }
-    $tagsSet = [System.Collections.Generic.HashSet[string]]::new($tags)
+    $tagsSet = [System.Collections.Generic.HashSet[string]]::new([string[]]($tags))
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
@@ -22894,6 +22894,7 @@ function Search-Tags {
   }
   $rows | Select-Object pmcid, title, journal, url, tags
 }
+
 
 
 

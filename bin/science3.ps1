@@ -216,7 +216,7 @@ function Update-Tags {
     $existing = @()
     if ($tags.PSObject.Properties.Match($k).Count -gt 0) { $existing = @($tags.$k) | ForEach-Object { [string]$_ } }
     else { Add-Member -InputObject $tags -NotePropertyName $k -NotePropertyValue @() }
-    $set = [System.Collections.Generic.HashSet[string]]::new([string[]]$existing)
+    $set = [System.Collections.Generic.HashSet[string]]::new([string[]]([string[]]$existing))
     foreach ($p in $Add[$k]) { if ($p -and -not $set -contains ($p)) { $null = $set.Add($p) } }
     $tags.$k = [string[]]$set
   }
@@ -477,6 +477,7 @@ function Compute-TagDiff {
   }
   $newOnes | Sort-Object count -Descending
 }
+
 
 
 
