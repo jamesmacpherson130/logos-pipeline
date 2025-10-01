@@ -1,16 +1,24 @@
-# OS/Editor bits
+# OS/editor
 .DS_Store
 Thumbs.db
-# Local outputs
+# Local outputs (keep *markdown* reports for provenance)
 science_index.csv
 jsonl/
-logos/knowledge.json
-logos/doctrine.md
-logos/reports/
-logos/history/
 insights/insights.jsonl
-# Raw/parsed artifacts
+# doctrine & reports
+# track doctrine.md and report .md files
+# ignore non-md artifacts under logos/
+logos/knowledge.json
+logos/history/
+logos/reports/
+!logos/reports/*.md
+logs/
+# Raw/parsed artifacts (reproducible; not tracked)
 raw/
 parsed/
-# Exports
+# Exports (CSV/XLSX/etc) — share separately
 exports/
+export_*.csv
+# Python helpers, caches
+__pycache__/
+*.pyc

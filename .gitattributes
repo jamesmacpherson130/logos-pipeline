@@ -1,2 +1,9 @@
-* text=auto
-*.ps1 text eol=crlf
+* text=auto eol=lf
+# Treat PowerShell like code for diffs
+*.ps1 diff
+# Markdown always text
+*.md text
+# CSVs are text but we usually ignore them anyway
+*.csv text
+# Preserve Windows scripts if needed
+*.cmd text eol=crlf
