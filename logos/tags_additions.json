@@ -1,16 +1,207 @@
-{
-  "ineffable": [
-    "(?i)ineffable",
-    "(?i)beyond words"
-  ],
-  "unity": [
-    "(?i)oneness",
-    "(?i)unity",
-    "(?i)interconnected"
-  ],
-  "compassion": [
-    "(?i)unconditional love",
-    "(?i)profound love"
-  ],
-  "gamma": "(?i)\\bgamma\\b"
-}
+[
+  {
+    "tag": "anesthesia",
+    "patterns": [
+      "during surgery",
+      "operating table",
+      "under anesthesia"
+    ]
+  },
+  {
+    "tag": "being_of_light",
+    "patterns": [
+      "being of light",
+      "presence of light"
+    ]
+  },
+  {
+    "tag": "boundary_barrier",
+    "patterns": "\\b(barrier|border|point of no return)\\b"
+  },
+  {
+    "tag": "brilliant_light",
+    "patterns": "\\b(brilliant|radiant|blinding)\\s+light\\b"
+  },
+  {
+    "tag": "cardiac_arrest",
+    "patterns": [
+      "\\bflat(line|lined)\\b",
+      "\\bheart\\s+(stopped|stops|had stopped)\\b",
+      "cardiac arrest"
+    ]
+  },
+  {
+    "tag": "childbirth",
+    "patterns": [
+      "during childbirth",
+      "labor complications"
+    ]
+  },
+  {
+    "tag": "coma",
+    "patterns": [
+      "\\bcoma\\b",
+      "unconscious( for|)\\s+\\d+\\s+(days|weeks)"
+    ]
+  },
+  {
+    "tag": "fear_then_relief",
+    "patterns": "\\bfear\\b.*(dissolved|vanished|replaced by)"
+  },
+  {
+    "tag": "future_glimpse",
+    "patterns": "\\b(future|prophetic)\\s+(glimpse|vision)\\b"
+  },
+  {
+    "tag": "guides_ancestors",
+    "patterns": "\\b(guide|guardian|angel|ancestor)s?\\b"
+  },
+  {
+    "tag": "health_recovery_anomalous",
+    "patterns": [
+      "spontaneous remission",
+      "unexpected recovery"
+    ]
+  },
+  {
+    "tag": "heavenly_realm",
+    "patterns": [
+      "celestial (city|landscape)",
+      "heavenly (realm|place)"
+    ]
+  },
+  {
+    "tag": "hyperreal_colors",
+    "patterns": "(colors|colour)s?\\s+(more|beyond)\\s+vivid"
+  },
+  {
+    "tag": "illness_critical",
+    "patterns": [
+      "cancer (treatment|therapy)",
+      "severe infection",
+      "terminal illness"
+    ]
+  },
+  {
+    "tag": "life_review_emotional",
+    "patterns": [
+      "\\blife review\\b",
+      "my whole life (flashed|played) before"
+    ]
+  },
+  {
+    "tag": "love_unconditional",
+    "patterns": [
+      "love beyond words",
+      "unconditional love"
+    ]
+  },
+  {
+    "tag": "music_harmony",
+    "patterns": [
+      "\\b(unearthly|heavenly)\\s+music\\b",
+      "harmonies (beyond|indescribable)"
+    ]
+  },
+  {
+    "tag": "near_drowning",
+    "patterns": [
+      "\\b(drowned|nearly drowned)\\b",
+      "submerged in water"
+    ]
+  },
+  {
+    "tag": "obe_autoscopy",
+    "patterns": [
+      "\\bautoscopy\\b",
+      "out of (my|the) body",
+      "saw (my|the) body below"
+    ]
+  },
+  {
+    "tag": "peace_calm",
+    "patterns": [
+      "\\b(overwhelming|intense)\\s+peace\\b",
+      "\\b(profound|deep)\\s+(peace|calm)\\b"
+    ]
+  },
+  {
+    "tag": "psi_sensitivity_reports",
+    "patterns": [
+      "heightened sensitivity",
+      "increased intuition"
+    ]
+  },
+  {
+    "tag": "purpose_meaning",
+    "patterns": "\\b(new|renewed)\\s+sense of purpose\\b"
+  },
+  {
+    "tag": "reduced_fear_of_death",
+    "patterns": [
+      "fear of death (vanished|reduced)",
+      "no longer afraid of death"
+    ]
+  },
+  {
+    "tag": "remote_observation",
+    "patterns": [
+      "observed events in another room",
+      "saw objects later verified"
+    ]
+  },
+  {
+    "tag": "respiratory_failure",
+    "patterns": [
+      "respiratory failure",
+      "stopped breathing"
+    ]
+  },
+  {
+    "tag": "seizure",
+    "patterns": [
+      "\\b(epileptic|convulsion)\\b",
+      "\\bseizure\\b"
+    ]
+  },
+  {
+    "tag": "third_party_corroboration",
+    "patterns": "witness(es)? later confirmed"
+  },
+  {
+    "tag": "trauma_injury",
+    "patterns": [
+      "\\baccident\\b",
+      "massive blood loss",
+      "severe injury"
+    ]
+  },
+  {
+    "tag": "tunnel_light",
+    "patterns": [
+      "moving through a tunnel",
+      "tunnel of light"
+    ]
+  },
+  {
+    "tag": "value_shift_altruism",
+    "patterns": [
+      "became more (compassionate|altruistic)",
+      "priorities (changed|shifted)"
+    ]
+  },
+  {
+    "tag": "veridical_perception",
+    "patterns": [
+      "\\bveridical\\b",
+      "accurate details later confirmed"
+    ]
+  },
+  {
+    "tag": "void_darkness_peaceful",
+    "patterns": [
+      "\\bvoid\\b",
+      "peaceful darkness"
+    ]
+  }
+]
