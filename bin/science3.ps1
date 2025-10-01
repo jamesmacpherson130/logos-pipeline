@@ -343,23 +343,26 @@ Base:  $Base
     [pscustomobject]@{ metric = 'Filtered hits'; value = @($rowsHit).Count }
     [pscustomobject]@{ metric = 'Top tag count (knowledge)'; value = if($knowledge){ @($knowledge.tags).Count } else { 0 } }
   )
-  $summaryMD = ConvertTo-MDTable -Rows $summaryRows -Headers @('metric','value')
+  $summaryMD = ConvertTo-MDTable -Rows $summaryRows
   $topTagsMD = ""
   if ($knowledge -and $knowledge.tags) {
-    $topTagsMD = ConvertTo-MDTable -Rows ($knowledge.tags | Select-Object -First 25) -Headers @('tag','count')
+    $topTagsMD = $rows = @($knowledge.tags | Select-Object -First 25)
+$hitsMD = if ($rows -and $rows.Count -gt 0) { ConvertTo-MDTable -Rows $rows } else { "# No tagged records matched these filters." }
   }
   $coocRows = $cooc | ForEach-Object {
     $parts = $_.pair -split '\|',2
     [pscustomobject]@{ tagA = $parts[0]; tagB = $parts[1]; count = $_.count }
   }
-  $coocMD = ConvertTo-MDTable -Rows ($coocRows | Select-Object -First 25) -Headers @('tagA','tagB','count')
-  $hitsMD = ConvertTo-MDTable -Rows (
+  $coocMD = $rows = @($coocRows | Select-Object -First 25)
+$hitsMD = if ($rows -and $rows.Count -gt 0) { ConvertTo-MDTable -Rows $rows } else { "# No tagged records matched these filters." }
+  $hitsMD = $rows = @(
                $rowsHit | Select-Object -First $Top -Property pmcid,title,journal,url,tags
-             ) -Headers @('pmcid','title','journal','url','tags')
+             )
+$hitsMD = if ($rows -and $rows.Count -gt 0) { ConvertTo-MDTable -Rows $rows } else { "# No tagged records matched these filters." }
   $insRows = $insights |
                Sort-Object { $_.ts } -Descending |
                Select-Object -First 20 -Property ts,title,body,tags
-  $insMD = ConvertTo-MDTable -Rows $insRows -Headers @('ts','title','body','tags')
+  $insMD = ConvertTo-MDTable -Rows $insRows
 $md = @"
 $hdr
 ## Summary
@@ -487,6 +490,8 @@ function Compute-TagDiff {
   }
   $newOnes | Sort-Object count -Descending
 }
+
+
 
 
 
