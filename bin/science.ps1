@@ -1183,7 +1183,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -1366,7 +1366,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -2000,7 +2000,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -2183,7 +2183,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -2817,7 +2817,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -3000,7 +3000,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -3632,7 +3632,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -3815,7 +3815,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -4448,7 +4448,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -4631,7 +4631,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -5267,7 +5267,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -5450,7 +5450,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -6084,7 +6084,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -6267,7 +6267,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -6899,7 +6899,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -7082,7 +7082,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -7715,7 +7715,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -7898,7 +7898,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -7948,7 +7948,7 @@ $insMd
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -8665,7 +8665,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -8848,7 +8848,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -9482,7 +9482,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -9665,7 +9665,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -10299,7 +10299,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -10482,7 +10482,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -11114,7 +11114,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -11297,7 +11297,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -11930,7 +11930,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -12113,7 +12113,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -12749,7 +12749,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -12932,7 +12932,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -13566,7 +13566,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -13749,7 +13749,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -14381,7 +14381,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -14564,7 +14564,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -15197,7 +15197,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -15380,7 +15380,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -15483,7 +15483,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -16097,7 +16097,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -16280,7 +16280,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -16914,7 +16914,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -17097,7 +17097,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -17731,7 +17731,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -17914,7 +17914,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -18546,7 +18546,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -18729,7 +18729,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -19362,7 +19362,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -19545,7 +19545,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -20181,7 +20181,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -20364,7 +20364,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -20998,7 +20998,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -21181,7 +21181,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -21813,7 +21813,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -21996,7 +21996,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -22629,7 +22629,7 @@ if ($MyInvocation.MyCommand.Module) {
     $okAny = ($anySet.Count -eq 0) -or ($tagsSet.Overlaps($anySet))
     $okAll = $true
     if ($allSet.Count -gt 0) {
-      foreach($t in $allSet){ if(-not $tagsSet.Contains($t)){ $okAll = $false; break } }
+      foreach($t in $allSet){ if(-not $tagsSet -contains ($t)){ $okAll = $false; break } }
     }
     if ($okAny -and $okAll) {
       [pscustomobject]@{ PMCID=$rec.pmcid; TITLE=$rec.title; TAGS = ($tags -join ', '); JOURNAL=$rec.journal; URL=$rec.url }
@@ -22812,7 +22812,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ($knowledgeObj.tags | Select-Object -First 10) | ForEach-Object { "- **$($_.tag)**: $($_.count)" } -join "`n"
-  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" }) -join "`n"
+  $insMd   = ($insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" }) -join "`n"
   $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -22894,4 +22894,6 @@ function Search-Tags {
   }
   $rows | Select-Object pmcid, title, journal, url, tags
 }
+
+
 

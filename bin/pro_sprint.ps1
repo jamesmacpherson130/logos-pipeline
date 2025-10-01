@@ -1,4 +1,4 @@
-# pro_sprint.ps1  — utility helpers for the Pro sprint
+# pro_sprint.ps1  - utility helpers for the Pro sprint
 # Safe, idempotent, no Pro-only runtime requirements.
 function Get-RepoRoot {
   param([string]$HintPath = $PSScriptRoot)
@@ -135,5 +135,6 @@ function Push-Repo {
   git push $Remote $Branch
 }
 if ($MyInvocation.MyCommand.Module) { Export-ModuleMember -Function * }
+
 
 

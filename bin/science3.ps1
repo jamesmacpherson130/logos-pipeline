@@ -184,7 +184,7 @@ function Logos-Update {
   }
   $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
   $topTags = ( $knowledgeObj.tags | Select-Object -First 10 | ForEach-Object { "- **$($_.tag)**: $($_.count)" } ) -join "`n"
-  $insMd   = ( $insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" } ) -join "`n"
+  $insMd   = ( $insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) - **$($_.title)** - $($_.body)" } ) -join "`n"
 $md = @"
 # Logos Doctrine
 Built: $($knowledgeObj.built_at_utc)
@@ -217,7 +217,7 @@ function Update-Tags {
     if ($tags.PSObject.Properties.Match($k).Count -gt 0) { $existing = @($tags.$k) | ForEach-Object { [string]$_ } }
     else { Add-Member -InputObject $tags -NotePropertyName $k -NotePropertyValue @() }
     $set = [System.Collections.Generic.HashSet[string]]::new([string[]]$existing)
-    foreach ($p in $Add[$k]) { if ($p -and -not $set.Contains($p)) { $null = $set.Add($p) } }
+    foreach ($p in $Add[$k]) { if ($p -and -not $set -contains ($p)) { $null = $set.Add($p) } }
     $tags.$k = [string[]]$set
   }
   $tags | ConvertTo-Json -Depth 10 | Out-File -FilePath $TagsPath -Encoding UTF8
@@ -477,3 +477,9 @@ function Compute-TagDiff {
   }
   $newOnes | Sort-Object count -Descending
 }
+
+
+
+
+
+

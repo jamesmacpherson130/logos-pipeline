@@ -45,3 +45,4 @@ if ($Push) {
   git push $Remote $Branch
   Write-Host "Pushed changes to $Remote/$Branch."
 }
+
