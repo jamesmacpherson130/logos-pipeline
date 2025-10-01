@@ -1,0 +1,47 @@
+﻿# Medical domain tags for Logos pipeline
+# Safe: works on Plus & Pro equally
+- tag: "cardiac_arrest"
+  patterns:
+    - "cardiac arrest"
+    - "heart stopped"
+    - "flatline"
+- tag: "respiratory_failure"
+  patterns:
+    - "stopped breathing"
+    - "respiratory failure"
+    - "could not breathe"
+- tag: "anesthesia"
+  patterns:
+    - "under anesthesia"
+    - "during surgery"
+    - "operation table"
+- tag: "coma"
+  patterns:
+    - "coma"
+    - "unconscious.*days"
+    - "deep coma"
+- tag: "near_drowning"
+  patterns:
+    - "drowned"
+    - "nearly drowned"
+    - "submerged.*water"
+- tag: "trauma_injury"
+  patterns:
+    - "severe injury"
+    - "accident"
+    - "massive blood loss"
+- tag: "childbirth"
+  patterns:
+    - "during childbirth"
+    - "labor complications"
+    - "giving birth"
+- tag: "seizure"
+  patterns:
+    - "seizure"
+    - "epileptic"
+    - "convulsion"
+- tag: "illness"
+  patterns:
+    - "terminal illness"
+    - "severe infection"
+    - "cancer.*treatment"
