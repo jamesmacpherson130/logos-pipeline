@@ -1,0 +1,1 @@
+(gc "C:\Users\James\OneDrive\Desktop\science\pmc_pull.py") -replace "parser_version\s*[:=]\s*["'""]0\.2\.\d+["'""]", "parser_version=`"0.2.5`"" | Set-Content "C:\Users\James\OneDrive\Desktop\science\pmc_pull.py"

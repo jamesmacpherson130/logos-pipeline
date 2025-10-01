@@ -1,0 +1,88 @@
+{
+  "near-death": [
+    "(?i)near[- ]death",
+    "(?i)NDE\\b",
+    "(?i)\\bNDE\\b"
+  ],
+  "gamma": [
+    "(?i)\\bgamma\\b",
+    "(?i)30\\s*[-–to]{1,3}\\s*100\\s*Hz"
+  ],
+  "lfp": [
+    "(?i)\\bLFP\\b",
+    "(?i)local field potential"
+  ],
+  "eeg": [
+    "(?i)\\bEEG\\b",
+    "(?i)electroencephalogram"
+  ],
+  "freely-moving": [
+    "(?i)freely[- ]moving"
+  ],
+  "anesthetized": [
+    "(?i)anesthetiz(e|ed|ing)"
+  ],
+  "co2": [
+    "(?i)CO\\s*2",
+    "(?i)carbon dioxide"
+  ],
+  "rat": [
+    "(?i)\\brat(s)?\\b",
+    "(?i)rodent(s)?"
+  ],
+  "light": [
+    "(?i)brilliant light",
+    "(?i)bright light",
+    "(?i)luminous",
+    "(?i)radiance"
+  ],
+  "tunnel": [
+    "(?i)tunnel of light",
+    "(?i)dark tunnel",
+    "(?i)passageway",
+    "(?i)void tunnel"
+  ],
+  "life-review": [
+    "(?i)life review",
+    "(?i)flashback of my life",
+    "(?i)panoramic review",
+    "(?i)judgment of deeds"
+  ],
+  "peace": [
+    "(?i)overwhelming peace",
+    "(?i)calm",
+    "(?i)serenity",
+    "(?i)all-encompassing love"
+  ],
+  "out-of-body": [
+    "(?i)out[- ]of[- ]body",
+    "(?i)floating above",
+    "(?i)seeing my body"
+  ],
+  "beings": [
+    "(?i)spiritual being",
+    "(?i)entity",
+    "(?i)angel",
+    "(?i)guide",
+    "(?i)deceased relative"
+  ],
+  "void": [
+    "(?i)the void",
+    "(?i)emptiness",
+    "(?i)infinite darkness"
+  ],
+  "future-glimpse": [
+    "(?i)future event",
+    "(?i)prophecy",
+    "(?i)glimpse of what will come"
+  ],
+  "unity": [
+    "(?i)oneness",
+    "(?i)unity",
+    "(?i)interconnected"
+  ],
+  "ineffable": [
+    "(?i)ineffable",
+    "(?i)beyond words"
+  ]
+}

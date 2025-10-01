@@ -1,0 +1,946 @@
+function Rebuild-Index {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $parsed = Join-Path $Base 'parsed'
+  $outCsv = Join-Path $Base 'science_index.csv'
+  $rows = foreach($f in Get-ChildItem "$parsed\PMC*.txt" -ErrorAction SilentlyContinue){
+    $t = Get-Content $f.FullName -Raw
+    function Grab($label,$text){ $m=[regex]::Match($text,"(?m)^${label}:\s*(.*)$"); if($m.Success){$m.Groups[1].Value.Trim()} else {""} }
+    [pscustomobject]@{
+      PMCID   = [IO.Path]::GetFileNameWithoutExtension($f.Name)
+      TITLE   = Grab 'TITLE'   $t
+      JOURNAL = Grab 'JOURNAL' $t
+      DATE    = Grab 'DATE'    $t
+      DOI     = Grab 'DOI'     $t
+      URL     = Grab 'URL'     $t
+    }
+  }
+  $rows | Export-Csv -Path $outCsv -NoTypeInformation -Encoding UTF8
+  Write-Host "OK index -> $outCsv"
+}
+function Build-Jsonl {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string]$OutJsonl = $(Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl')
+  )
+  $PARSED = Join-Path $Base 'parsed'
+  $RAW    = Join-Path $Base 'raw'
+  New-Item -ItemType Directory -Force -Path (Split-Path $OutJsonl) | Out-Null
+  if (Test-Path $OutJsonl) { Remove-Item $OutJsonl -Force }
+  function Grab($label,$text){ $m=[regex]::Match($text,"(?m)^${label}:\s*(.*)$"); if($m.Success){$m.Groups[1].Value.Trim()} else {""} }
+  function Sha256OfFile($path){ if(Test-Path $path){ (Get-FileHash -Path $path -Algorithm SHA256).Hash.ToLower() } else { "" } }
+  Get-ChildItem "$PARSED\PMC*.txt" -ErrorAction SilentlyContinue | ForEach-Object {
+    $pmcid = [IO.Path]::GetFileNameWithoutExtension($_.Name)
+    $t     = Get-Content $_.FullName -Raw
+    $title    = Grab 'TITLE'   $t
+    $journal  = Grab 'JOURNAL' $t
+    $date     = Grab 'DATE'    $t
+    $doi      = Grab 'DOI'     $t
+    $url      = Grab 'URL'     $t
+    $authorsL = Grab 'AUTHORS' $t
+    $authors  = @(); if ($authorsL) { $authors = $authorsL -split '\s*,\s*' | Where-Object { $_ } }
+    $abs  = "";  $mAbs  = [regex]::Match($t, "(?s)(?m)ABSTRACT:\s*(.*?)(?:\r?\n\r?\n|^BODY:)")
+    if ($mAbs.Success) { $abs = $mAbs.Groups[1].Value.Trim() }
+    $body = "";  $mBody = [regex]::Match($t, "(?s)BODY:\s*(.*)$")
+    if ($mBody.Success) { $body = $mBody.Groups[1].Value.Trim() }
+    $wc = if ($body) { ($body -split '\s+').Count } else { 0 }
+    $rawHtmlPath = Join-Path $RAW "$pmcid.html"
+    $sourceHash  = Sha256OfFile $rawHtmlPath
+    $nowUtc      = [DateTimeOffset]::UtcNow.ToString("o")
+    $rec = [ordered]@{
+      schema_version     = "pmc-2.0"
+      pmcid              = $pmcid
+      title              = $title
+      journal            = $journal
+      date               = $date
+      doi                = $doi
+      url                = $url
+      authors            = $authors
+      abstract           = $abs
+      body_text          = $body
+      word_count_body    = $wc
+      source_hash_sha256 = $sourceHash
+      built_at_utc       = $nowUtc
+    }
+    ($rec | ConvertTo-Json -Depth 6 -Compress) | Out-File -FilePath $OutJsonl -Append -Encoding UTF8
+  }
+  Write-Host "OK jsonl -> $OutJsonl"
+}
+function Load-TagRules {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $tagsPath = Join-Path $Base "tags.json"
+  if (!(Test-Path $tagsPath)) { throw "Missing tags.json at $tagsPath" }
+  (Get-Content $tagsPath -Raw | ConvertFrom-Json)
+}
+function Tag-StudiesFromFile {
+  param(
+    [string]$Base     = "C:\Users\James\OneDrive\Desktop\science",
+    [string]$InJsonl  = $(Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'),
+    [string]$OutJsonl = $(Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl')
+  )
+  if (!(Test-Path $InJsonl)) { throw "Input JSONL not found: $InJsonl" }
+  $rules = Load-TagRules -Base $Base
+  New-Item -ItemType Directory -Force -Path (Split-Path $OutJsonl) | Out-Null
+  if (Test-Path $OutJsonl) { Remove-Item $OutJsonl -Force }
+  $i = 0; $tagged = 0
+  Get-Content $InJsonl | ForEach-Object {
+    $line = $_.Trim(); if (-not $line) { return }
+    $rec = $line | ConvertFrom-Json
+    $parts = @()
+    if ($rec.title)     { $parts += [string]$rec.title }
+    if ($rec.abstract)  { $parts += [string]$rec.abstract }
+    if ($rec.body_text) { $parts += [string]$rec.body_text }
+    $hay = ($parts -join " `n"); if (-not $hay) { $hay = "" }
+    $hay = $hay.ToLowerInvariant()
+    $tags = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($kv in $rules.PSObject.Properties) {
+      $tag = $kv.Name
+      foreach ($p in $kv.Value) {
+        if ([string]::IsNullOrWhiteSpace($p)) { continue }
+        if ([regex]::IsMatch($hay, $p, 'IgnoreCase')) { $null = $tags.Add($tag); break }
+      }
+    }
+    if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) {
+      foreach ($t in @($rec.tags)) { if ($t) { $null = $tags.Add([string]$t) } }
+    }
+    $out = [ordered]@{}
+    foreach ($p in $rec.PSObject.Properties) { $out[$p.Name] = $p.Value }
+    $out['tags'] = [string[]]$tags
+    ($out | ConvertTo-Json -Depth 10 -Compress) | Out-File -FilePath $OutJsonl -Append -Encoding UTF8
+    $i++; if ($tags.Count -gt 0) { $tagged++ }
+  }
+  Write-Host "OK tagged $tagged / $i -> $OutJsonl"
+}
+function Search-Tags {
+  param(
+    [string]   $Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string[]] $Any,
+    [string[]] $All
+  )
+  $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl'
+  if (!(Test-Path $jsonl)) { throw "Missing $jsonl. Run Logos-Run first." }
+  $rows = Get-Content $jsonl | ForEach-Object { $_ | ConvertFrom-Json }
+  if ($Any -and $Any.Count) {
+    $anyLower = $Any | ForEach-Object { $_.ToLower() }
+    $rows = $rows | Where-Object {
+      $tagsLower = @($_.tags) | ForEach-Object { $_.ToString().ToLower() }
+      (($anyLower | Where-Object { $_ -in $tagsLower }).Count -gt 0)
+    }
+  }
+  if ($All -and $All.Count) {
+    $allLower = $All | ForEach-Object { $_.ToLower() }
+    $rows = $rows | Where-Object {
+      $tagsLower = @($_.tags) | ForEach-Object { $_.ToString().ToLower() }
+      (($allLower | Where-Object { $_ -notin $tagsLower }).Count -eq 0)
+    }
+  }
+  $rows | Select-Object pmcid, title, journal, url, tags
+}
+function Add-Insight {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [Parameter(Mandatory)] [string]$Title,
+    [Parameter(Mandatory)] [string]$Body,
+    [string[]]$Tags = @()
+  )
+  $insDir  = Join-Path $Base 'insights'
+  $insFile = Join-Path $insDir 'insights.jsonl'
+  New-Item -ItemType Directory -Force -Path $insDir | Out-Null
+  $rec = [ordered]@{
+    ts    = [DateTimeOffset]::UtcNow.ToString('o')
+    title = $Title
+    body  = $Body
+    tags  = $Tags
+  }
+  ($rec | ConvertTo-Json -Compress) | Out-File -FilePath $insFile -Append -Encoding UTF8
+  Write-Host "OK insight -> $insFile"
+}
+function Logos-Update {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $jsonlV3  = Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl'
+  $insFile  = Join-Path $Base 'insights\insights.jsonl'
+  $logosDir = Join-Path $Base 'logos'
+  $knowledge= Join-Path $logosDir 'knowledge.json'
+  $doctrine = Join-Path $logosDir 'doctrine.md'
+  New-Item -ItemType Directory -Force -Path $logosDir | Out-Null
+  if (!(Test-Path $jsonlV3)) { throw "Missing $jsonlV3. Run Logos-Run first." }
+  $rows = Get-Content $jsonlV3 | ForEach-Object { $_ | ConvertFrom-Json }
+  $tagFreq = @{}
+  foreach($r in $rows){
+    if ($r.PSObject.Properties.Match('tags').Count -gt 0 -and $r.tags){
+      foreach($t in $r.tags){
+        $k = [string]$t
+        if($k){ if($tagFreq.ContainsKey($k)){ $tagFreq[$k]++ } else { $tagFreq[$k] = 1 } }
+      }
+    }
+  }
+  $insights = @()
+  if (Test-Path $insFile) { $insights = Get-Content $insFile | ForEach-Object { $_ | ConvertFrom-Json } }
+  $knowledgeObj = [ordered]@{
+    built_at_utc = [DateTimeOffset]::UtcNow.ToString('o')
+    corpus_size  = @($rows).Count
+    tags         = $tagFreq.GetEnumerator() | Sort-Object -Property Value -Descending |
+                   ForEach-Object { @{ tag = $_.Key; count = $_.Value } }
+    insights     = $insights
+  }
+  $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
+  $topTags = ( $knowledgeObj.tags | Select-Object -First 10 | ForEach-Object { "- **$($_.tag)**: $($_.count)" } ) -join "`n"
+  $insMd   = ( $insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" } ) -join "`n"
+  $md = @"
+# Logos Doctrine
+Built: $($knowledgeObj.built_at_utc)
+Corpus Size: $($knowledgeObj.corpus_size)
+## Top Tags
+$topTags
+## Recent Insights
+$insMd
+"@
+  $md | Out-File -FilePath $doctrine -Encoding UTF8
+  Write-Host "OK Logos updated -> $knowledge"
+  Write-Host "OK Doctrine written -> $doctrine"
+}
+function Logos-Run {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  Write-Host "Rebuilding index..."; Rebuild-Index -Base $Base
+  Write-Host "Building JSONL...";  Build-Jsonl    -Base $Base
+  Write-Host "Tagging records..."; Tag-StudiesFromFile -Base $Base
+  Write-Host "Done."
+}
+function Search-Text {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [Parameter(Mandatory)][string]$Pattern,   # regex (case-insensitive by default)
+    [int]$Top = 20
+  )
+  $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl'
+  if (!(Test-Path $jsonl)) { throw "Missing $jsonl. Run Logos-Run first." }
+  Get-Content $jsonl |
+    ForEach-Object { $_ | ConvertFrom-Json } |
+    Where-Object {
+      $hay = @($_.title, $_.abstract, $_.body_text) -join "`n"
+      if (-not $hay) { return $false }
+      [regex]::IsMatch($hay, $Pattern, 'IgnoreCase')
+    } |
+    Select-Object pmcid, title, journal, url, tags -First $Top
+}
+
+function Validate-TagsJson {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $tagsPath = Join-Path $Base 'tags.json'
+  if (!(Test-Path $tagsPath)) { throw "Missing $tagsPath" }
+  try {
+    $obj = Get-Content $tagsPath -Raw | ConvertFrom-Json -ErrorAction Stop
+    $ok = $true
+    foreach($kv in $obj.PSObject.Properties){
+      if (-not ($kv.Value -is [System.Collections.IEnumerable])) {
+        Write-Warning "Tag '$($kv.Name)' is not an array."; $ok = $false
+      }
+    }
+    if($ok){ Write-Host "OK tags.json" }
+  } catch {
+    Write-Error "tags.json is not valid JSON: $($_.Exception.Message)"
+  }
+}
+
+function Generate-Report {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string[]]$Any,
+    [string[]]$All,
+    [int]$Top = 50,
+    [string]$OutPath
+  )
+  $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl'
+  $repDir = Join-Path $Base 'logos\reports'
+  New-Item -ItemType Directory -Force -Path $repDir | Out-Null
+  if (-not $OutPath) {
+    $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+    $OutPath = Join-Path $repDir "report_$stamp.md"
+  }
+
+  if (!(Test-Path $jsonl)) { throw "Missing $jsonl. Run Logos-Run first." }
+  $rows = Get-Content $jsonl | ForEach-Object { $_ | ConvertFrom-Json }
+
+  # Tag filtering (reuse logic similar to Search-Tags)
+  if ($Any -and $Any.Count) {
+    $anyLower = $Any | ForEach-Object { $_.ToLower() }
+    $rows = $rows | Where-Object {
+      $tagsLower = @($_.tags) | ForEach-Object { $_.ToString().ToLower() }
+      (($anyLower | Where-Object { $_ -in $tagsLower }).Count -gt 0)
+    }
+  }
+  if ($All -and $All.Count) {
+    $allLower = $All | ForEach-Object { $_.ToLower() }
+    $rows = $rows | Where-Object {
+      $tagsLower = @($_.tags) | ForEach-Object { $_.ToString().ToLower() }
+      (($allLower | Where-Object { $_ -notin $tagsLower }).Count -eq 0)
+    }
+  }
+
+  $rows = $rows | Select-Object pmcid,title,journal,url,tags -First $Top
+
+  # Co-tag frequencies
+  $freq = @{}
+  foreach($r in $rows){
+    if($r.tags){
+      foreach($t in $r.tags){
+        $k = [string]$t
+        if($k){
+          if($freq.ContainsKey($k)){ $freq[$k]++ } else { $freq[$k] = 1 }
+        }
+      }
+    }
+  }
+  $coTags = $freq.GetEnumerator() | Sort-Object -Property Value -Descending |
+            ForEach-Object { "- **$($_.Key)**: $($_.Value)" } | Select-Object -First 20
+  $coTagsMd = ($coTags -join "`n")
+
+  # List items
+  $items = foreach($r in $rows){
+    $tg = if($r.tags){ ($r.tags -join ", ") } else { "" }
+    "* **$($r.title)**  `n  - [$($r.pmcid)]($($r.url)) • $($r.journal)  `n  - _tags:_ $tg"
+  }
+  $itemsMd = ($items -join "`n`n")
+
+  $now = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+  $anyStr = if($Any){ '-Any ' + ($Any -join ',') } else { '' }
+  $allStr = if($All){ '-All ' + ($All -join ',') } else { '' }
+
+  $md = @"
+# Logos Report
+Built: $now
+
+**Filters:** $anyStr $allStr  
+**Matches:** $(@($rows).Count) (showing up to $Top)
+
+## Top Co-Tags (within result set)
+$coTagsMd
+
+## Items
+$itemsMd
+"@
+
+  $md | Out-File -FilePath $OutPath -Encoding UTF8
+  Write-Host "OK report -> $OutPath"
+}
+function Latest-Report {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $repDir = Join-Path $Base 'logos\reports'
+  if (!(Test-Path $repDir)) { return $null }
+  Get-ChildItem $repDir -Filter *.md -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending | Select-Object -First 1
+}
+
+function Open-IfAvailable {
+  param([string]$Path)
+  if (-not $Path) { return }
+  $code = Get-Command code -ErrorAction SilentlyContinue
+  if ($code) { & $code $Path }
+  else { Start-Process notepad.exe $Path }
+}
+
+function Logos-RunAll {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string[]]$Any,
+    [string[]]$All,
+    [int]$Top = 50,
+    [switch]$Open
+  )
+  $addPath = Join-Path $Base "logos\tags_additions.json"
+  if (Test-Path $addPath) {
+    try {
+      $addObj = Get-Content $addPath -Raw | ConvertFrom-Json
+      $add = @{}
+      foreach ($p in $addObj.PSObject.Properties) { $add[$p.Name] = @($p.Value) }
+      if ($add.Count -gt 0) { Update-Tags -Base $Base -Add $add }
+    } catch {
+      Write-Warning "tags_additions.json parse error: $(function Rebuild-Index {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $parsed = Join-Path $Base 'parsed'
+  $outCsv = Join-Path $Base 'science_index.csv'
+  $rows = foreach($f in Get-ChildItem "$parsed\PMC*.txt" -ErrorAction SilentlyContinue){
+    $t = Get-Content $f.FullName -Raw
+    function Grab($label,$text){ $m=[regex]::Match($text,"(?m)^${label}:\s*(.*)$"); if($m.Success){$m.Groups[1].Value.Trim()} else {""} }
+    [pscustomobject]@{
+      PMCID   = [IO.Path]::GetFileNameWithoutExtension($f.Name)
+      TITLE   = Grab 'TITLE'   $t
+      JOURNAL = Grab 'JOURNAL' $t
+      DATE    = Grab 'DATE'    $t
+      DOI     = Grab 'DOI'     $t
+      URL     = Grab 'URL'     $t
+    }
+  }
+  $rows | Export-Csv -Path $outCsv -NoTypeInformation -Encoding UTF8
+  Write-Host "OK index -> $outCsv"
+}
+function Build-Jsonl {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string]$OutJsonl = $(Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl')
+  )
+  $PARSED = Join-Path $Base 'parsed'
+  $RAW    = Join-Path $Base 'raw'
+  New-Item -ItemType Directory -Force -Path (Split-Path $OutJsonl) | Out-Null
+  if (Test-Path $OutJsonl) { Remove-Item $OutJsonl -Force }
+  function Grab($label,$text){ $m=[regex]::Match($text,"(?m)^${label}:\s*(.*)$"); if($m.Success){$m.Groups[1].Value.Trim()} else {""} }
+  function Sha256OfFile($path){ if(Test-Path $path){ (Get-FileHash -Path $path -Algorithm SHA256).Hash.ToLower() } else { "" } }
+  Get-ChildItem "$PARSED\PMC*.txt" -ErrorAction SilentlyContinue | ForEach-Object {
+    $pmcid = [IO.Path]::GetFileNameWithoutExtension($_.Name)
+    $t     = Get-Content $_.FullName -Raw
+    $title    = Grab 'TITLE'   $t
+    $journal  = Grab 'JOURNAL' $t
+    $date     = Grab 'DATE'    $t
+    $doi      = Grab 'DOI'     $t
+    $url      = Grab 'URL'     $t
+    $authorsL = Grab 'AUTHORS' $t
+    $authors  = @(); if ($authorsL) { $authors = $authorsL -split '\s*,\s*' | Where-Object { $_ } }
+    $abs  = "";  $mAbs  = [regex]::Match($t, "(?s)(?m)ABSTRACT:\s*(.*?)(?:\r?\n\r?\n|^BODY:)")
+    if ($mAbs.Success) { $abs = $mAbs.Groups[1].Value.Trim() }
+    $body = "";  $mBody = [regex]::Match($t, "(?s)BODY:\s*(.*)$")
+    if ($mBody.Success) { $body = $mBody.Groups[1].Value.Trim() }
+    $wc = if ($body) { ($body -split '\s+').Count } else { 0 }
+    $rawHtmlPath = Join-Path $RAW "$pmcid.html"
+    $sourceHash  = Sha256OfFile $rawHtmlPath
+    $nowUtc      = [DateTimeOffset]::UtcNow.ToString("o")
+    $rec = [ordered]@{
+      schema_version     = "pmc-2.0"
+      pmcid              = $pmcid
+      title              = $title
+      journal            = $journal
+      date               = $date
+      doi                = $doi
+      url                = $url
+      authors            = $authors
+      abstract           = $abs
+      body_text          = $body
+      word_count_body    = $wc
+      source_hash_sha256 = $sourceHash
+      built_at_utc       = $nowUtc
+    }
+    ($rec | ConvertTo-Json -Depth 6 -Compress) | Out-File -FilePath $OutJsonl -Append -Encoding UTF8
+  }
+  Write-Host "OK jsonl -> $OutJsonl"
+}
+function Load-TagRules {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $tagsPath = Join-Path $Base "tags.json"
+  if (!(Test-Path $tagsPath)) { throw "Missing tags.json at $tagsPath" }
+  (Get-Content $tagsPath -Raw | ConvertFrom-Json)
+}
+function Tag-StudiesFromFile {
+  param(
+    [string]$Base     = "C:\Users\James\OneDrive\Desktop\science",
+    [string]$InJsonl  = $(Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'),
+    [string]$OutJsonl = $(Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl')
+  )
+  if (!(Test-Path $InJsonl)) { throw "Input JSONL not found: $InJsonl" }
+  $rules = Load-TagRules -Base $Base
+  New-Item -ItemType Directory -Force -Path (Split-Path $OutJsonl) | Out-Null
+  if (Test-Path $OutJsonl) { Remove-Item $OutJsonl -Force }
+  $i = 0; $tagged = 0
+  Get-Content $InJsonl | ForEach-Object {
+    $line = $_.Trim(); if (-not $line) { return }
+    $rec = $line | ConvertFrom-Json
+    $parts = @()
+    if ($rec.title)     { $parts += [string]$rec.title }
+    if ($rec.abstract)  { $parts += [string]$rec.abstract }
+    if ($rec.body_text) { $parts += [string]$rec.body_text }
+    $hay = ($parts -join " `n"); if (-not $hay) { $hay = "" }
+    $hay = $hay.ToLowerInvariant()
+    $tags = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($kv in $rules.PSObject.Properties) {
+      $tag = $kv.Name
+      foreach ($p in $kv.Value) {
+        if ([string]::IsNullOrWhiteSpace($p)) { continue }
+        if ([regex]::IsMatch($hay, $p, 'IgnoreCase')) { $null = $tags.Add($tag); break }
+      }
+    }
+    if ($rec.PSObject.Properties.Match('tags').Count -gt 0 -and $rec.tags) {
+      foreach ($t in @($rec.tags)) { if ($t) { $null = $tags.Add([string]$t) } }
+    }
+    $out = [ordered]@{}
+    foreach ($p in $rec.PSObject.Properties) { $out[$p.Name] = $p.Value }
+    $out['tags'] = [string[]]$tags
+    ($out | ConvertTo-Json -Depth 10 -Compress) | Out-File -FilePath $OutJsonl -Append -Encoding UTF8
+    $i++; if ($tags.Count -gt 0) { $tagged++ }
+  }
+  Write-Host "OK tagged $tagged / $i -> $OutJsonl"
+}
+function Search-Tags {
+  param(
+    [string]   $Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string[]] $Any,
+    [string[]] $All
+  )
+  $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl'
+  if (!(Test-Path $jsonl)) { throw "Missing $jsonl. Run Logos-Run first." }
+  $rows = Get-Content $jsonl | ForEach-Object { $_ | ConvertFrom-Json }
+  if ($Any -and $Any.Count) {
+    $anyLower = $Any | ForEach-Object { $_.ToLower() }
+    $rows = $rows | Where-Object {
+      $tagsLower = @($_.tags) | ForEach-Object { $_.ToString().ToLower() }
+      (($anyLower | Where-Object { $_ -in $tagsLower }).Count -gt 0)
+    }
+  }
+  if ($All -and $All.Count) {
+    $allLower = $All | ForEach-Object { $_.ToLower() }
+    $rows = $rows | Where-Object {
+      $tagsLower = @($_.tags) | ForEach-Object { $_.ToString().ToLower() }
+      (($allLower | Where-Object { $_ -notin $tagsLower }).Count -eq 0)
+    }
+  }
+  $rows | Select-Object pmcid, title, journal, url, tags
+}
+function Add-Insight {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [Parameter(Mandatory)] [string]$Title,
+    [Parameter(Mandatory)] [string]$Body,
+    [string[]]$Tags = @()
+  )
+  $insDir  = Join-Path $Base 'insights'
+  $insFile = Join-Path $insDir 'insights.jsonl'
+  New-Item -ItemType Directory -Force -Path $insDir | Out-Null
+  $rec = [ordered]@{
+    ts    = [DateTimeOffset]::UtcNow.ToString('o')
+    title = $Title
+    body  = $Body
+    tags  = $Tags
+  }
+  ($rec | ConvertTo-Json -Compress) | Out-File -FilePath $insFile -Append -Encoding UTF8
+  Write-Host "OK insight -> $insFile"
+}
+function Logos-Update {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $jsonlV3  = Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl'
+  $insFile  = Join-Path $Base 'insights\insights.jsonl'
+  $logosDir = Join-Path $Base 'logos'
+  $knowledge= Join-Path $logosDir 'knowledge.json'
+  $doctrine = Join-Path $logosDir 'doctrine.md'
+  New-Item -ItemType Directory -Force -Path $logosDir | Out-Null
+  if (!(Test-Path $jsonlV3)) { throw "Missing $jsonlV3. Run Logos-Run first." }
+  $rows = Get-Content $jsonlV3 | ForEach-Object { $_ | ConvertFrom-Json }
+  $tagFreq = @{}
+  foreach($r in $rows){
+    if ($r.PSObject.Properties.Match('tags').Count -gt 0 -and $r.tags){
+      foreach($t in $r.tags){
+        $k = [string]$t
+        if($k){ if($tagFreq.ContainsKey($k)){ $tagFreq[$k]++ } else { $tagFreq[$k] = 1 } }
+      }
+    }
+  }
+  $insights = @()
+  if (Test-Path $insFile) { $insights = Get-Content $insFile | ForEach-Object { $_ | ConvertFrom-Json } }
+  $knowledgeObj = [ordered]@{
+    built_at_utc = [DateTimeOffset]::UtcNow.ToString('o')
+    corpus_size  = @($rows).Count
+    tags         = $tagFreq.GetEnumerator() | Sort-Object -Property Value -Descending |
+                   ForEach-Object { @{ tag = $_.Key; count = $_.Value } }
+    insights     = $insights
+  }
+  $knowledgeObj | ConvertTo-Json -Depth 6 | Out-File -FilePath $knowledge -Encoding UTF8
+  $topTags = ( $knowledgeObj.tags | Select-Object -First 10 | ForEach-Object { "- **$($_.tag)**: $($_.count)" } ) -join "`n"
+  $insMd   = ( $insights | Select-Object -First 10 | ForEach-Object { "* $($_.ts) — **$($_.title)** — $($_.body)" } ) -join "`n"
+  $md = @"
+# Logos Doctrine
+Built: $($knowledgeObj.built_at_utc)
+Corpus Size: $($knowledgeObj.corpus_size)
+## Top Tags
+$topTags
+## Recent Insights
+$insMd
+"@
+  $md | Out-File -FilePath $doctrine -Encoding UTF8
+  Write-Host "OK Logos updated -> $knowledge"
+  Write-Host "OK Doctrine written -> $doctrine"
+}
+function Logos-Run {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  Write-Host "Rebuilding index..."; Rebuild-Index -Base $Base
+  Write-Host "Building JSONL...";  Build-Jsonl    -Base $Base
+  Write-Host "Tagging records..."; Tag-StudiesFromFile -Base $Base
+  Write-Host "Done."
+}
+function Search-Text {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [Parameter(Mandatory)][string]$Pattern,   # regex (case-insensitive by default)
+    [int]$Top = 20
+  )
+  $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl'
+  if (!(Test-Path $jsonl)) { throw "Missing $jsonl. Run Logos-Run first." }
+  Get-Content $jsonl |
+    ForEach-Object { $_ | ConvertFrom-Json } |
+    Where-Object {
+      $hay = @($_.title, $_.abstract, $_.body_text) -join "`n"
+      if (-not $hay) { return $false }
+      [regex]::IsMatch($hay, $Pattern, 'IgnoreCase')
+    } |
+    Select-Object pmcid, title, journal, url, tags -First $Top
+}
+
+function Validate-TagsJson {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $tagsPath = Join-Path $Base 'tags.json'
+  if (!(Test-Path $tagsPath)) { throw "Missing $tagsPath" }
+  try {
+    $obj = Get-Content $tagsPath -Raw | ConvertFrom-Json -ErrorAction Stop
+    $ok = $true
+    foreach($kv in $obj.PSObject.Properties){
+      if (-not ($kv.Value -is [System.Collections.IEnumerable])) {
+        Write-Warning "Tag '$($kv.Name)' is not an array."; $ok = $false
+      }
+    }
+    if($ok){ Write-Host "OK tags.json" }
+  } catch {
+    Write-Error "tags.json is not valid JSON: $($_.Exception.Message)"
+  }
+}
+
+function Generate-Report {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string[]]$Any,
+    [string[]]$All,
+    [int]$Top = 50,
+    [string]$OutPath
+  )
+  $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v3.jsonl'
+  $repDir = Join-Path $Base 'logos\reports'
+  New-Item -ItemType Directory -Force -Path $repDir | Out-Null
+  if (-not $OutPath) {
+    $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+    $OutPath = Join-Path $repDir "report_$stamp.md"
+  }
+
+  if (!(Test-Path $jsonl)) { throw "Missing $jsonl. Run Logos-Run first." }
+  $rows = Get-Content $jsonl | ForEach-Object { $_ | ConvertFrom-Json }
+
+  # Tag filtering (reuse logic similar to Search-Tags)
+  if ($Any -and $Any.Count) {
+    $anyLower = $Any | ForEach-Object { $_.ToLower() }
+    $rows = $rows | Where-Object {
+      $tagsLower = @($_.tags) | ForEach-Object { $_.ToString().ToLower() }
+      (($anyLower | Where-Object { $_ -in $tagsLower }).Count -gt 0)
+    }
+  }
+  if ($All -and $All.Count) {
+    $allLower = $All | ForEach-Object { $_.ToLower() }
+    $rows = $rows | Where-Object {
+      $tagsLower = @($_.tags) | ForEach-Object { $_.ToString().ToLower() }
+      (($allLower | Where-Object { $_ -notin $tagsLower }).Count -eq 0)
+    }
+  }
+
+  $rows = $rows | Select-Object pmcid,title,journal,url,tags -First $Top
+
+  # Co-tag frequencies
+  $freq = @{}
+  foreach($r in $rows){
+    if($r.tags){
+      foreach($t in $r.tags){
+        $k = [string]$t
+        if($k){
+          if($freq.ContainsKey($k)){ $freq[$k]++ } else { $freq[$k] = 1 }
+        }
+      }
+    }
+  }
+  $coTags = $freq.GetEnumerator() | Sort-Object -Property Value -Descending |
+            ForEach-Object { "- **$($_.Key)**: $($_.Value)" } | Select-Object -First 20
+  $coTagsMd = ($coTags -join "`n")
+
+  # List items
+  $items = foreach($r in $rows){
+    $tg = if($r.tags){ ($r.tags -join ", ") } else { "" }
+    "* **$($r.title)**  `n  - [$($r.pmcid)]($($r.url)) • $($r.journal)  `n  - _tags:_ $tg"
+  }
+  $itemsMd = ($items -join "`n`n")
+
+  $now = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+  $anyStr = if($Any){ '-Any ' + ($Any -join ',') } else { '' }
+  $allStr = if($All){ '-All ' + ($All -join ',') } else { '' }
+
+  $md = @"
+# Logos Report
+Built: $now
+
+**Filters:** $anyStr $allStr  
+**Matches:** $(@($rows).Count) (showing up to $Top)
+
+## Top Co-Tags (within result set)
+$coTagsMd
+
+## Items
+$itemsMd
+"@
+
+  $md | Out-File -FilePath $OutPath -Encoding UTF8
+  Write-Host "OK report -> $OutPath"
+}
+function Latest-Report {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $repDir = Join-Path $Base 'logos\reports'
+  if (!(Test-Path $repDir)) { return $null }
+  Get-ChildItem $repDir -Filter *.md -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending | Select-Object -First 1
+}
+
+function Open-IfAvailable {
+  param([string]$Path)
+  if (-not $Path) { return }
+  $code = Get-Command code -ErrorAction SilentlyContinue
+  if ($code) { & $code $Path }
+  else { Start-Process notepad.exe $Path }
+}
+
+function Logos-RunAll {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string[]]$Any,
+    [string[]]$All,
+    [int]$Top = 50,
+    [switch]$Open
+  )
+  # 1) Rebuild → JSONL → Tag
+  Write-Host "Rebuilding index..."
+  Rebuild-Index -Base $Base
+  Write-Host "Building JSONL..."
+  Build-Jsonl -Base $Base
+  Write-Host "Tagging records..."
+  Tag-StudiesFromFile -Base $Base
+
+  # 2) Knowledge + doctrine
+  Logos-Update -Base $Base
+
+  # 3) Report
+  $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+  $out   = Join-Path $Base "logos\reports\report_$stamp.md"
+  Generate-Report -Base $Base -Any $Any -All $All -Top $Top -OutPath $out
+  Write-Host "OK all done -> $out"
+
+  if ($Open) { Open-IfAvailable -Path $out }
+}
+function Zip-Snapshot {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $snapDir = Join-Path $Base 'snapshots'
+  New-Item -ItemType Directory -Force -Path $snapDir | Out-Null
+  $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+  $zip   = Join-Path $snapDir "science_$stamp.zip"
+
+  $paths = @(
+    (Join-Path $Base 'parsed'),
+    (Join-Path $Base 'raw'),
+    (Join-Path $Base 'jsonl'),
+    (Join-Path $Base 'logos'),
+    (Join-Path $Base 'insights'),
+    (Join-Path $Base 'logs'),
+    (Join-Path $Base 'science_index.csv'),
+    (Join-Path $Base 'tags.json')
+  ) | Where-Object { Test-Path $_ }
+
+  if (!$paths) { Write-Host "Nothing to snapshot."; return $null }
+  if (Test-Path $zip) { Remove-Item $zip -Force }
+  Compress-Archive -Path $paths -DestinationPath $zip -Force
+  Write-Host "OK snapshot -> $zip"
+  return $zip
+}
+
+function Logos-RunBatch {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string]$QueriesFile = $(Join-Path $Base 'logos\queries.txt'),
+    [int]$Top = 50,
+    [switch]$OpenLatest
+  )
+  if (!(Test-Path $QueriesFile)) {
+    Write-Host "No queries file at $QueriesFile. Create it with one query per line, e.g.:"
+    Write-Host "  near-death,gamma"
+    Write-Host "  lfp,eeg"
+    return
+  }
+  # Make sure corpus & tags are fresh
+  Logos-Run -Base $Base
+  Logos-Update -Base $Base
+
+  $outDir = Join-Path $Base 'logos\reports'
+  New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+  $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+  $batchDir = Join-Path $outDir "batch_$stamp"
+  New-Item -ItemType Directory -Force -Path $batchDir | Out-Null
+
+  $lines = Get-Content $QueriesFile | Where-Object { $_ -and $_.Trim() -ne '' }
+  $i=0
+  foreach($line in $lines){
+    $tagsAny = $line.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+    $i++
+    $out = Join-Path $batchDir ("report_{0:00}_{1}.md" -f $i, ($tagsAny -join '_'))
+    Generate-Report -Base $Base -Any $tagsAny -Top $Top -OutPath $out
+    Write-Host ("OK report -> {0}" -f $out)
+  }
+
+  if ($OpenLatest) {
+    $latest = Get-ChildItem $batchDir -Filter *.md | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($latest) {
+      $code = Get-Command code -ErrorAction SilentlyContinue
+      if ($code) { & $code $latest.FullName } else { Start-Process notepad.exe $latest.FullName }
+    }
+  }
+  Write-Host "OK batch complete -> $batchDir"
+}
+function Update-Tags {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [hashtable]$Add
+  )
+  $TagsPath = Join-Path $Base "tags.json"
+  $tags = if (Test-Path $TagsPath) { Get-Content $TagsPath -Raw | ConvertFrom-Json } else { [pscustomobject]@{} }
+
+  foreach ($k in $Add.Keys) {
+    $existing = @()
+    if ($tags.PSObject.Properties.Match($k).Count -gt 0) { $existing = @($tags.$k) | ForEach-Object { [string]$_ } }
+    else { Add-Member -InputObject $tags -NotePropertyName $k -NotePropertyValue @() }
+    $set = [System.Collections.Generic.HashSet[string]]::new([string[]]$existing)
+    foreach ($p in $Add[$k]) { if ($p -and -not $set.Contains($p)) { $null = $set.Add($p) } }
+    $tags.$k = [string[]]$set
+  }
+
+  $tags | ConvertTo-Json -Depth 10 | Out-File -FilePath $TagsPath -Encoding UTF8
+  Write-Host "OK tags.json updated -> $TagsPath"
+}
+.Exception.Message)"
+    }
+  }
+
+  Write-Host "Rebuilding index..."; Rebuild-Index -Base $Base
+  Write-Host "Building JSONL..." ;   Build-Jsonl    -Base $Base
+  Write-Host "Tagging records..." ;  Tag-StudiesFromFile -Base $Base
+
+  Logos-Update -Base $Base
+
+  $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+  $out   = Join-Path $Base "logos\reports\report_$stamp.md"
+  if (-not (Get-Command Generate-Report -ErrorAction SilentlyContinue)) {
+    # minimal inline report if Generate-Report not present
+    $doc = @"
+# Logos Report ($stamp)
+
+See: logos\doctrine.md
+"@
+    New-Item -ItemType Directory -Force -Path (Split-Path $out) | Out-Null
+    $doc | Set-Content -Path $out -Encoding UTF8
+  } else {
+    Generate-Report -Base $Base -Any $Any -All $All -Top $Top -OutPath $out
+  }
+  Write-Host "OK all done -> $out"
+  if ($Open) {
+    $code = Get-Command code -ErrorAction SilentlyContinue
+    if ($code) { & $code $out } else { Start-Process notepad.exe $out }
+  }
+}
+}
+function Zip-Snapshot {
+  param([string]$Base = "C:\Users\James\OneDrive\Desktop\science")
+  $snapDir = Join-Path $Base 'snapshots'
+  New-Item -ItemType Directory -Force -Path $snapDir | Out-Null
+  $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+  $zip   = Join-Path $snapDir "science_$stamp.zip"
+
+  $paths = @(
+    (Join-Path $Base 'parsed'),
+    (Join-Path $Base 'raw'),
+    (Join-Path $Base 'jsonl'),
+    (Join-Path $Base 'logos'),
+    (Join-Path $Base 'insights'),
+    (Join-Path $Base 'logs'),
+    (Join-Path $Base 'science_index.csv'),
+    (Join-Path $Base 'tags.json')
+  ) | Where-Object { Test-Path $_ }
+
+  if (!$paths) { Write-Host "Nothing to snapshot."; return $null }
+  if (Test-Path $zip) { Remove-Item $zip -Force }
+  Compress-Archive -Path $paths -DestinationPath $zip -Force
+  Write-Host "OK snapshot -> $zip"
+  return $zip
+}
+
+function Logos-RunBatch {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [string]$QueriesFile = $(Join-Path $Base 'logos\queries.txt'),
+    [int]$Top = 50,
+    [switch]$OpenLatest
+  )
+  if (!(Test-Path $QueriesFile)) {
+    Write-Host "No queries file at $QueriesFile. Create it with one query per line, e.g.:"
+    Write-Host "  near-death,gamma"
+    Write-Host "  lfp,eeg"
+    return
+  }
+  # Make sure corpus & tags are fresh
+  Logos-Run -Base $Base
+  Logos-Update -Base $Base
+
+  $outDir = Join-Path $Base 'logos\reports'
+  New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+  $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+  $batchDir = Join-Path $outDir "batch_$stamp"
+  New-Item -ItemType Directory -Force -Path $batchDir | Out-Null
+
+  $lines = Get-Content $QueriesFile | Where-Object { $_ -and $_.Trim() -ne '' }
+  $i=0
+  foreach($line in $lines){
+    $tagsAny = $line.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+    $i++
+    $out = Join-Path $batchDir ("report_{0:00}_{1}.md" -f $i, ($tagsAny -join '_'))
+    Generate-Report -Base $Base -Any $tagsAny -Top $Top -OutPath $out
+    Write-Host ("OK report -> {0}" -f $out)
+  }
+
+  if ($OpenLatest) {
+    $latest = Get-ChildItem $batchDir -Filter *.md | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($latest) {
+      $code = Get-Command code -ErrorAction SilentlyContinue
+      if ($code) { & $code $latest.FullName } else { Start-Process notepad.exe $latest.FullName }
+    }
+  }
+  Write-Host "OK batch complete -> $batchDir"
+}
+function Update-Tags {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [hashtable]$Add
+  )
+  $TagsPath = Join-Path $Base "tags.json"
+  $tags = if (Test-Path $TagsPath) { Get-Content $TagsPath -Raw | ConvertFrom-Json } else { [pscustomobject]@{} }
+
+  foreach ($k in $Add.Keys) {
+    $existing = @()
+    if ($tags.PSObject.Properties.Match($k).Count -gt 0) { $existing = @($tags.$k) | ForEach-Object { [string]$_ } }
+    else { Add-Member -InputObject $tags -NotePropertyName $k -NotePropertyValue @() }
+    $set = [System.Collections.Generic.HashSet[string]]::new([string[]]$existing)
+    foreach ($p in $Add[$k]) { if ($p -and -not $set.Contains($p)) { $null = $set.Add($p) } }
+    $tags.$k = [string[]]$set
+  }
+
+  $tags | ConvertTo-Json -Depth 10 | Out-File -FilePath $TagsPath -Encoding UTF8
+  Write-Host "OK tags.json updated -> $TagsPath"
+}
+
+
+
+function Add-Pattern {
+  param(
+    [string]$Base = "C:\Users\James\OneDrive\Desktop\science",
+    [Parameter(Mandatory)][string]$Tag,
+    [Parameter(Mandatory)][string]$Pattern
+  )
+  $tagsPath = Join-Path $Base 'logos\tags_additions.json'
+  $obj = if (Test-Path $tagsPath) { Get-Content $tagsPath -Raw | ConvertFrom-Json } else { [pscustomobject]@{} }
+  if ($obj.PSObject.Properties.Match($Tag).Count -eq 0) { Add-Member -InputObject $obj -NotePropertyName $Tag -NotePropertyValue @() }
+  $arr = @($obj.$Tag) + @($Pattern)
+  $obj.$Tag = $arr | Select-Object -Unique
+  $obj | ConvertTo-Json -Depth 10 | Out-File -FilePath $tagsPath -Encoding UTF8
+  Write-Host "OK additions updated -> $tagsPath"
+}
+
