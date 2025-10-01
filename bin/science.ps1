@@ -226,7 +226,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -306,7 +306,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -813,7 +813,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -893,7 +893,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -1630,7 +1630,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -1710,7 +1710,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -2447,7 +2447,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -2527,7 +2527,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -3262,7 +3262,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -3342,7 +3342,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -4078,7 +4078,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -4158,7 +4158,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -4897,7 +4897,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -4977,7 +4977,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -5714,7 +5714,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -5794,7 +5794,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -6529,7 +6529,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -6609,7 +6609,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -7345,7 +7345,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -7425,7 +7425,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -8295,7 +8295,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -8375,7 +8375,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -9112,7 +9112,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -9192,7 +9192,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -9929,7 +9929,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -10009,7 +10009,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -10744,7 +10744,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -10824,7 +10824,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -11560,7 +11560,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -11640,7 +11640,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -12379,7 +12379,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -12459,7 +12459,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -13196,7 +13196,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -13276,7 +13276,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -14011,7 +14011,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -14091,7 +14091,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -14827,7 +14827,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -14907,7 +14907,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -15727,7 +15727,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -15807,7 +15807,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -16544,7 +16544,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -16624,7 +16624,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -17361,7 +17361,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -17441,7 +17441,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -18176,7 +18176,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -18256,7 +18256,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -18992,7 +18992,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -19072,7 +19072,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -19811,7 +19811,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -19891,7 +19891,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -20628,7 +20628,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -20708,7 +20708,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -21443,7 +21443,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -21523,7 +21523,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -22259,7 +22259,7 @@ function Search-Body {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   $sw = [Diagnostics.Stopwatch]::StartNew()
   Get-Content $jsonl | ForEach-Object {
@@ -22339,7 +22339,7 @@ function Search-BodyWithSnippets {
   )
   $jsonl = Join-Path $Base 'jsonl\pmc_catalog.v2.jsonl'
   if(!(Test-Path $jsonl)){ Write-Host "?? Build JSONL first (Build-Jsonl)"; return }
-  $rx = [regex]::new($Pattern, 'IgnoreCase')
+  $rx = [regex]::new($Pattern, 'IgnoreCase', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
   $hits = @()
   Get-Content $jsonl | ForEach-Object {
     $o = $_ | ConvertFrom-Json
@@ -22894,6 +22894,7 @@ function Search-Tags {
   }
   $rows | Select-Object pmcid, title, journal, url, tags
 }
+
 
 
 
